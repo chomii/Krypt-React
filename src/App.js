@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Link, Route } from 'react-router-dom';
-import Dashboard from './components/Dashboard';
+import CurrencyTable from './components/CurrencyTable';
 import CurrencyDetails from './components/CurrencyDetails';
 import './App.css';
 
@@ -16,7 +16,7 @@ class App extends Component {
           </nav>
         </div>
         <div className="container">
-          <Route path="/dashboard" component={Dashboard}/>
+          <Route path="/dashboard" component={CurrencyTable}/>
           <Route path="/details" component={CurrencyDetails}/>
         </div>
       </div>
