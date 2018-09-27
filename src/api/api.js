@@ -7,7 +7,7 @@ export function getTableData() {
     })
     .then(response => {
         // ovde handlovati razlicite statuse // todo
-        console.log(response);
+        console.log(response.json);
         
     })
     .then(data => {
@@ -16,6 +16,6 @@ export function getTableData() {
     .catch(e => console.log(e));
 }
 
-function getDetailsData() {
+export function getDetailsData() {
 
 }

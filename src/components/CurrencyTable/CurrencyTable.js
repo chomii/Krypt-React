@@ -1,19 +1,19 @@
 import React from 'react';
 import { Table } from 'semantic-ui-react';
-
+import { capitalize } from '../../Utility';
 const { Header, HeaderCell, Row } = Table;
 
 const TableFields = ['#', 'name', 'market cap', 'price', 'circulating supply', 'change(24h)'];
 
-const Dashboard = (props) => {
+const CurrencyTable = (props) => {
     return (
-        <div classname="dashboard">
+        <div className="dashboard">
             <Table basic>
                 <Header>
                     <Row>
                         {
-                            TableFields.map(field => (
-                                <HeaderCell>{field}</HeaderCell>
+                            TableFields.map((field, index) => (
+                                <HeaderCell key={index}>{capitalize(field)}</HeaderCell>
                             ))
                         }
                     </Row>
@@ -23,4 +23,4 @@ const Dashboard = (props) => {
     )
 }
 
-export default Dashboard;
+export default CurrencyTable;
