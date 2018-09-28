@@ -22,7 +22,7 @@ class InputComponent extends Component {
     render() {
         return (
             <div className="input-wrapper">
-                <CustomInputField onValueChange={this.handleOnChange} />
+                <CustomInputField onValueChange={this.handleOnChange} iconType='search'/>
                 <h2 className="input-text">{this.state.input}</h2>
             </div>
         )

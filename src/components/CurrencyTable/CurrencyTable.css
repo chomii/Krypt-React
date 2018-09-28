@@ -1,0 +1,9 @@
+.segment {
+    height: 100vh;
+}
+.dashboard {
+    padding: 20px;
+}
+.table {
+    padding: 40px;
+}
