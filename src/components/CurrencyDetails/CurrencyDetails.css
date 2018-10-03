@@ -1,0 +1,51 @@
+
+
+.details-content {
+    padding: 2rem 15rem;
+}
+.details-header--panel {
+    display: flex;
+    padding: 5rem 15rem 0 15rem;
+    align-items: baseline;
+  }
+  .details-header--panel-left {
+    display: flex;
+    padding: 10px;
+    align-items: baseline;
+  }
+  .details-header--item{ 
+    margin: 0;
+    padding: 0;
+  }
+  .details-header--item.header-symbol {
+    color: #959595;
+    margin-left: 20px;
+  }
+  .details-header--item.header-name {
+    margin-left: 20px;
+  }
+  .details-header--panel-right {
+    display: flex;
+    padding: 10px;
+  }
+  .details-header--panel-price {
+    margin-left: 100px;
+  }
+  .details-header--panel-currency {
+    margin-left: 20px;
+  }
+  .details-header--panel-percentage {
+    margin-left: 20px;
+  }
+  .red {
+    color: orangered;
+  }
+  .green {
+    color: greenyellow;
+  }
+  .divider {
+    padding: 2rem 15rem;
+  }
+  .divider.placeholder-margin {
+      margin-top: 40rem;
+  }

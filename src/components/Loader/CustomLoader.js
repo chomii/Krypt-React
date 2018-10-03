@@ -1,14 +1,14 @@
 import React from 'react';
-import { Dimmer, Loader, Segment } from 'semantic-ui-react'
+import { Dimmer, Loader } from 'semantic-ui-react'
 
 const CustomLoader = (props) => {
 
     return(
-        <Segment>
+        <div className='loaderWrapper'>
             <Dimmer active inverted>
-                <Loader size='massive' inline='centered'/>
+                <Loader size='massive' inline='centered'>Loading</Loader>
             </Dimmer>
-        </Segment>
+        </div>
     )
 }
 

@@ -1,0 +1,19 @@
+.header-container {
+    clip-path: polygon(0 0, 100% 0, 100% 90%, 0 100%);
+    background: linear-gradient(to right bottom, rgba(127, 127, 213, .4), rgba(134, 168, 231, .4), rgba(145, 234, 228, .4));
+    min-height: 70vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.header-main--text {
+    color: #fff;
+    font-size: 5rem;
+    font-weight: 200;
+    text-transform: uppercase;
+    letter-spacing: 20px;
+}
+
+@media only screen and (max-width : 600px) {
+    
+}

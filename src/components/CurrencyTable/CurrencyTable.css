@@ -1,9 +1,17 @@
-.segment {
-    height: 100vh;
+
+.table thead th.column-header:hover {
+    color: #4183c4;
+    cursor: pointer;
 }
-.dashboard {
-    padding: 20px;
+.clickable:hover {
+    color: #4183c4;
+    cursor: pointer;
 }
-.table {
-    padding: 40px;
+.loaderWrapper {
+    min-height: 85vh;
 }
+
+.tableWrapper {
+    padding: 10rem 10rem 5rem 10rem;
+}
+

@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import './CurrencyTable.css';
 import { Table } from 'semantic-ui-react';
-import { capitalize, numberOfPages } from '../../Utility';
+import { capitalize, numberOfPages, formatTwoDecimals } from '../../services/util/Util';
 import { getTableData } from '../../services/api/api';
 import CustomLoader from '../Loader/CustomLoader';
 import CustomPagination from '../Pagination/CustomPagination';
@@ -9,7 +10,7 @@ import CustomPagination from '../Pagination/CustomPagination';
 const { Header, HeaderCell, Row, Body, Cell } = Table;
 
 const TableFields = ['#', 'name', 'price', 'circulating supply', 'change(24h)'];
-const elementsPerPage = 10;
+const elementsPerPage = 15;
 
 class CurrencyTable extends Component {
 
@@ -17,32 +18,76 @@ class CurrencyTable extends Component {
         super(props);
         this.state = {
             data : [],
-            isLoading: true,
-            numberOfPages: 0
+            isLoading : true,
+            numberOfPages : 0,
+            activePage : 1,
+            sortType : 'id'
         }
+
+        this.handlePageChange = this.handlePageChange.bind(this);
     } 
 
     componentDidMount() {
 
-        getTableData(2, elementsPerPage).then((data) => {
-
-            let numPages = numberOfPages(data.metadata.num_cryptocurrencies, elementsPerPage);
-            //console.log(numPages);
-            this.setState({data : Object.values(data.data), isLoading : false, numberOfPages : numPages})
-            
-            console.log('componentDidMount', this.state);
-        }).catch((error) => {
+        const { activePage, sortType } = this.state;
+        console.log(this.props, 'from')
+        getTableData(activePage, elementsPerPage, sortType).then(data => {
+            const numPages = numberOfPages(data.metadata.num_cryptocurrencies, elementsPerPage);
+            //debugger
+            this.setState({
+                data : Object.values(data.data), 
+                isLoading : false, 
+                numberOfPages : numPages
+            });
+        }).catch(error => {
             console.error(error);
         });
-        
-    }
-    renderLoader() {
-        return <CustomLoader/>
     }
 
-    handlePageChange(event) {
-        console.log(event);
+    calculatePage(activePage) {
+        return activePage === 1 ? 1 : ((activePage - 1) * 10 + 1);
     }
+
+    handlePageChange(pageClicked) {
+        
+
+        this.setState({activePage : parseInt(pageClicked, 10), isLoading : true});
+        
+        getTableData(this.calculatePage(pageClicked), elementsPerPage).then(data => {
+            this.setState({data : Object.values(data.data), isLoading : false});
+        }).catch(error => {
+            console.log(error);
+        })
+        console.log(parseInt(pageClicked, 10), 'page clicked');
+        console.log(this.state, 'clicked');
+    }
+
+    handleColumnClick(e, field) {
+        console.log(field);
+        this.setState({sortType : field, isLoading : true});
+
+        getTableData(this.calculatePage(this.state.activePage), elementsPerPage, field).then(data => {
+            this.setState({data : Object.values(data.data), isLoading : false});
+        }).catch(error => {
+            console.log(error);
+        })
+    }
+
+    // handleDetailsClick(e, elId) {
+    //     console.log(elId);
+    //     getDetailsData(elId).then(data => {
+    //         console.log(data, 'handle details click');
+    //         this.setState({currencyDetails : data.data})
+    //     })
+    // }
+
+    calculateIndexForActivePage(index) {
+        return ((elementsPerPage * (this.state.activePage - 1)) + index + 1);
+    }
+
+    // fetching details for id 
+
+    
 
     renderTable() {
         return(
@@ -51,31 +96,41 @@ class CurrencyTable extends Component {
                 <Header>
                     <Row>
                         {
-                            TableFields.map((field, index) => (
-                                <HeaderCell key={index}>{capitalize(field)}</HeaderCell>
-                            ))
+                            TableFields.map((field, index) => {
+                                let className = '';
+                                switch(field) {
+                                    case '#':
+                                        className = 'column-header';
+                                        return <HeaderCell className={className} key={index} onClick={e => this.handleColumnClick(e, 'id')}>{capitalize(field)}</HeaderCell>;
+                                    case 'name':
+                                        className = 'column-header';
+                                        return <HeaderCell className={className} key={index} onClick={e => this.handleColumnClick(e, 'name')}>{capitalize(field)}</HeaderCell>;
+                                    case 'change(24h)':
+                                        className = 'column-header';
+                                        return <HeaderCell className={className} key={index} onClick={e => this.handleColumnClick(e, 'percent_change_24h')}>{capitalize(field)}</HeaderCell>;
+                                    default: 
+                                        return <HeaderCell className={className} key={index}>{capitalize(field)}</HeaderCell>;
+                                }
+                            })
                         }
                     </Row>
                 </Header>
                 <Body>
                     {
-                        this.state.data.map((el, index) => {
-                            
-                            return(
-                                <Row key={index}>
-                                    <Cell>{el.id}</Cell>
-                                    <Cell>{el.name}</Cell>
-                                    <Cell>{el.quotes.USD.price.toFixed(2) + ' $'}</Cell>
+                        this.state.data.map((el, index) => (
+                                <Row key={el.id}>
+                                    <Cell>{this.calculateIndexForActivePage(index)}</Cell>
+                                    <Cell className='clickable'><Link to={`/details/${el.id}`}>{el.name}</Link></Cell>
+                                    <Cell>{`${formatTwoDecimals(el.quotes.USD.price)} $`}</Cell>
                                     <Cell>{el.circulating_supply}</Cell>
-                                    <Cell>{el.quotes.USD.percent_change_24h.toFixed(2) + ' %'}</Cell>
-                                    
+                                    <Cell>{`${formatTwoDecimals(el.quotes.USD.percent_change_24h)} %`}</Cell>
                                 </Row>
                             )
-                        })
+                        )
                     }
                 </Body>
             </Table>
-            <CustomPagination activePage={5} totalPages={this.state.numberOfPages} onPageChange={this.handlePageChange}/>
+            <CustomPagination activePage={this.state.activePage} totalPages={this.state.numberOfPages} onPageChange={this.handlePageChange}/>
             </div>
         )
     }
@@ -84,7 +139,7 @@ class CurrencyTable extends Component {
         console.log('render');
         return (
             <div className="dashboard">
-                {this.state.isLoading ? this.renderLoader() : this.renderTable()}
+                {this.state.isLoading ? <CustomLoader/> : this.renderTable()}
             </div>
         )
     }
